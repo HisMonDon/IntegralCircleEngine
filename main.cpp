@@ -58,7 +58,6 @@ int main() {
             //std::cout<<x<<endl;
             //x++;
         }
-        // Initialize with a "null" event type (sf::Event::None)
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
         {
