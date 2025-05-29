@@ -4,7 +4,7 @@
 //#include<imgui.h>
 //#include <imgui-sfml/imgui-SFML.h>
 using namespace std;
-//integral stuff
+
 float ybelow(float bally, float waterline) {
     if (bally - waterline >= 0) {
         return bally-waterline;
@@ -38,7 +38,7 @@ int main() {
     float gravity = 9.81;
     float buoyancyForce = getareaofcircle(ballradius, 0) * densitywater* gravity;
 
-    //////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////
     sf::RenderWindow window(sf::VideoMode({width, height}), "Simple Buoyancy Simulator (First SFML Project)");
 
     sf::CircleShape ball(ballradius);
