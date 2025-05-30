@@ -14,8 +14,7 @@ float ybelow(float bally, float waterline) {
     return 0.0;
 }
 float integratecircle(float r, float h) {
-    float a = sqrt(2*r*h - pow(h, 2));
-    return(a*(2*(r - h) + abs(r-h)+pow(r,2)*asin(a/r)));
+    return(pow(r,2)*acos((h-r)/r)+ (r - h)*sqrt(2*h*r - pow(h, 2)));
 }
 float getareaofcircle (float radius, float ybelow) {
     float x1 = sqrt(pow(radius, 2)- pow(ybelow, 2));
@@ -40,7 +39,8 @@ int main() {
     float densitywater = 1;
     float gravity = 9.81;
     float buoyancyForce = getareaofcircle(ballradius, 0) * densitywater* gravity;
-
+    float area;
+    float ballarea = M_PI*pow(ballradius, 2);
     ///////////////////////////////////////////////////////////////
     sf::RenderWindow window(sf::VideoMode({width, height}), "Simple Buoyancy Simulator (First SFML Project)");
 
@@ -56,11 +56,23 @@ int main() {
     text.setStyle(sf::Text::Bold);
     text.setFillColor(sf::Color::Red);
     text.setPosition({10, 10});
+
     //////////////////////////////////////////////////////////////////
     while (window.isOpen()) {
-        text.setString("Submerged area: " + to_string(area) +
+        if (bally + ballradius < waterline) {
+            text.setString("Submerged area: " + to_string(0) +
                            "\nBall Y: " + to_string(bally) +
                            "\nControls: W/S to move ball");
+        } else  if (bally - ballradius > waterline) {
+            text.setString("Submerged area: " + to_string(M_PI*pow(ballradius, 2)) +
+                           "\nBall Y: " + to_string(bally) +
+                           "\nControls: W/S to move ball");
+        } else {
+            text.setString("Submerged area: " + to_string(ballarea - integratecircle(ballradius, (bally + ballradius) + waterline)) +
+                           "\nBall Y: " + to_string(bally) +
+                           "\nControls: W/S to move ball");
+        }
+
         if (auto event = window.pollEvent()) {
             if (event-> is<sf::Event::Closed>()) {
                 window.close();
@@ -86,8 +98,9 @@ int main() {
         window.draw(water);
         ball.setPosition({ballx, bally});
         window.draw(ball);
-        window.display();
         window.draw(text);
+        window.display();
+
 
     }
 }
