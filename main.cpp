@@ -59,7 +59,7 @@ int main() {
 
     //////////////////////////////////////////////////////////////////
     while (window.isOpen()) {
-        if (bally + ballradius < waterline) {
+        if (bally < waterline) {
             text.setString("Submerged area: " + to_string(0) +
                            "\nBall Y: " + to_string(bally) +
                            "\nControls: W/S to move ball");
@@ -68,10 +68,11 @@ int main() {
                            "\nBall Y: " + to_string(bally) +
                            "\nControls: W/S to move ball");
         } else {
-            text.setString("Submerged area: " + to_string(ballarea - integratecircle(ballradius, (bally + ballradius) + waterline)) +
+            text.setString("Submerged area: " + to_string(ballarea - integratecircle(ballradius, (bally + ballradius) - waterline)) +
                            "\nBall Y: " + to_string(bally) +
                            "\nControls: W/S to move ball");
         }
+
 
         if (auto event = window.pollEvent()) {
             if (event-> is<sf::Event::Closed>()) {
