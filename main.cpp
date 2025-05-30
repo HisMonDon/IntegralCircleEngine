@@ -1,18 +1,21 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <cmath>
+#include <string>
 //#include<imgui.h>
 //#include <imgui-sfml/imgui-SFML.h>
 using namespace std;
 
+sf::Font arial("arial.ttf");
 float ybelow(float bally, float waterline) {
     if (bally - waterline >= 0) {
         return bally-waterline;
     }
     return 0.0;
 }
-float integratecircle(float radius, float x) {
-    return(-1/3*3/2*(-2))*sqrt(pow(radius, 2) - pow(x, 2));
+float integratecircle(float r, float h) {
+    float a = sqrt(2*r*h - pow(h, 2));
+    return(a*(2*(r - h) + abs(r-h)+pow(r,2)*asin(a/r)));
 }
 float getareaofcircle (float radius, float ybelow) {
     float x1 = sqrt(pow(radius, 2)- pow(ybelow, 2));
@@ -48,9 +51,16 @@ int main() {
     sf::RectangleShape water({float(700), float(600)});
     water.setFillColor(sf::Color::Blue);
     water.setPosition({0.0, float(waterline)});
-
+    sf::Text text(arial, to_string(getareaofcircle(ballradius, ybelow(bally, waterline))));
+    text.setCharacterSize(30);
+    text.setStyle(sf::Text::Bold);
+    text.setFillColor(sf::Color::Red);
+    text.setPosition({10, 10});
     //////////////////////////////////////////////////////////////////
     while (window.isOpen()) {
+        text.setString("Submerged area: " + to_string(area) +
+                           "\nBall Y: " + to_string(bally) +
+                           "\nControls: W/S to move ball");
         if (auto event = window.pollEvent()) {
             if (event-> is<sf::Event::Closed>()) {
                 window.close();
@@ -77,9 +87,9 @@ int main() {
         ball.setPosition({ballx, bally});
         window.draw(ball);
         window.display();
+        window.draw(text);
 
     }
 }
-
 
 
