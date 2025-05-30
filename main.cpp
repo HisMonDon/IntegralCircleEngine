@@ -59,16 +59,16 @@ int main() {
 
     //////////////////////////////////////////////////////////////////
     while (window.isOpen()) {
-        if (bally < waterline) {
+        if (bally + 2*ballradius < waterline) {
             text.setString("Submerged area: " + to_string(0) +
                            "\nBall Y: " + to_string(bally) +
                            "\nControls: W/S to move ball");
-        } else  if (bally - ballradius > waterline) {
+        } else  if (bally > waterline) {
             text.setString("Submerged area: " + to_string(M_PI*pow(ballradius, 2)) +
                            "\nBall Y: " + to_string(bally) +
                            "\nControls: W/S to move ball");
         } else {
-            text.setString("Submerged area: " + to_string(ballarea - integratecircle(ballradius, (bally + ballradius) - waterline)) +
+            text.setString("Submerged area: " + to_string(ballarea - (ballarea - integratecircle(ballradius, waterline - bally))) +
                            "\nBall Y: " + to_string(bally) +
                            "\nControls: W/S to move ball");
         }
