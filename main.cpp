@@ -32,14 +32,14 @@ float getareaofcircle (float radius, float ybelow) {
 }
 int main() {
     //Variables
-    unsigned int width = 700;
-    unsigned int height = 500;
+    unsigned int width = 1000;
+    unsigned int height = 700;
     //int x = 0;
     float ballx = width/2 - 70;
     float bally = 200;
     float ballradius = 60;
     //water
-    int waterline = 300;
+    int waterline = 500;
     float waterx = 300.f;
     float watery = 0.f;
     float densitywater = 1;
@@ -49,13 +49,13 @@ int main() {
     float ballarea = M_PI*pow(ballradius, 2);
     bool dragging = false;
     ///////////////////////////////////////////////////////////////
-    sf::RenderWindow window(sf::VideoMode({width, height}), "Simple Buoyancy Simulator (First SFML Project)");
+    sf::RenderWindow window(sf::VideoMode({width, height}), "Simple Buoyancy Simulator");
 
     sf::CircleShape ball(ballradius);
     ball.setFillColor(sf::Color::Red);
     ball.setPosition({ballx, bally});
 
-    sf::RectangleShape water({float(700), float(600)});
+    sf::RectangleShape water({float(1500), float(600)});
     water.setFillColor(sf::Color::Blue);
     water.setPosition({0.0, float(waterline)});
     sf::Text text(arial, to_string(getareaofcircle(ballradius, ybelow(bally, waterline))));
@@ -75,15 +75,15 @@ int main() {
         if (bally + 2*ballradius < waterline) {
             text.setString("Submerged area: " + to_string(0) +
                            "\nBall Y: " + to_string(int(bally)) +
-                           "\nControls: W/S to move ball");
+                           "\nControls: Drag to move ball");
         } else if (bally > waterline) {
             text.setString("Submerged area: " + to_string(roundto2(M_PI*pow(ballradius, 2))) +
                            "\nBall Y: " + to_string(int(bally)) +
-                           "\nControls: W/S to move ball");
+                           "\nControls: Drag to move ball");
         } else {
             text.setString("Submerged area: " + to_string(roundto2(ballarea - (ballarea - integratecircle(ballradius, waterline - bally)))) +
                            "\nBall Y: " + to_string(int(bally)) +
-                           "\nControls: W/S to move ball");
+                           "\nControls: Drag to move ball");
         }
 
 
@@ -97,11 +97,11 @@ int main() {
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
         {
-            bally += 0.3;
+            bally += 0.1;
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
         {
-            bally -=0.3;
+            bally -=0.1;
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
         {
