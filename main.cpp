@@ -13,6 +13,12 @@ float ybelow(float bally, float waterline) {
     }
     return 0.0;
 }
+float roundto2(float var) {
+    char str[40];
+    sprintf(str, "%.2f", var);
+    sscanf(str, "%f", &var);
+    return var;
+}
 float integratecircle(float r, float h) {
     return(pow(r,2)*acos((h-r)/r)+ (r - h)*sqrt(2*h*r - pow(h, 2)));
 }
@@ -31,7 +37,7 @@ int main() {
     //int x = 0;
     float ballx = width/2 - 70;
     float bally = 200;
-    float ballradius = 30;
+    float ballradius = 60;
     //water
     int waterline = 300;
     float waterx = 300.f;
@@ -41,6 +47,7 @@ int main() {
     float buoyancyForce = getareaofcircle(ballradius, 0) * densitywater* gravity;
     float area;
     float ballarea = M_PI*pow(ballradius, 2);
+    bool dragging = false;
     ///////////////////////////////////////////////////////////////
     sf::RenderWindow window(sf::VideoMode({width, height}), "Simple Buoyancy Simulator (First SFML Project)");
 
@@ -59,17 +66,23 @@ int main() {
 
     //////////////////////////////////////////////////////////////////
     while (window.isOpen()) {
+        sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+            ballx = mouse_pos.x - ballradius;
+            bally = mouse_pos.y - ballradius;
+            ball.setPosition({mouse_pos.x - ballradius, mouse_pos.y - ballradius});
+        }
         if (bally + 2*ballradius < waterline) {
             text.setString("Submerged area: " + to_string(0) +
-                           "\nBall Y: " + to_string(bally) +
+                           "\nBall Y: " + to_string(int(bally)) +
                            "\nControls: W/S to move ball");
-        } else  if (bally > waterline) {
-            text.setString("Submerged area: " + to_string(M_PI*pow(ballradius, 2)) +
-                           "\nBall Y: " + to_string(bally) +
+        } else if (bally > waterline) {
+            text.setString("Submerged area: " + to_string(roundto2(M_PI*pow(ballradius, 2))) +
+                           "\nBall Y: " + to_string(int(bally)) +
                            "\nControls: W/S to move ball");
         } else {
-            text.setString("Submerged area: " + to_string(ballarea - (ballarea - integratecircle(ballradius, waterline - bally))) +
-                           "\nBall Y: " + to_string(bally) +
+            text.setString("Submerged area: " + to_string(roundto2(ballarea - (ballarea - integratecircle(ballradius, waterline - bally)))) +
+                           "\nBall Y: " + to_string(int(bally)) +
                            "\nControls: W/S to move ball");
         }
 
@@ -97,7 +110,6 @@ int main() {
 
         window.clear();
         window.draw(water);
-        ball.setPosition({ballx, bally});
         window.draw(ball);
         window.draw(text);
         window.display();
